@@ -1,61 +1,20 @@
-import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '1.2.1'
 }
 
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'maven-publish'
-
 group = 'com.drtshock'
-archivesBaseName = 'FactionShock'
 version = '0.0.1-SNAPSHOT'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+defaultTasks 'build'
 
-defaultTasks 'build', 'shadowJar'
-
-jar {
-    classifier = 'original'
-    // remove the version string from the final jar name
-    version = null
-}
-
-shadowJar {
-    classifier = ''
-    // remove the version string from the final jar name
-    version = null
-}
-
-shadowJar {
-    relocate 'com.google.gson', 'com.drtshock.factionshock.vendor.com.google.gson'
-
-    dependencies {
-        include(dependency('com.google.code.gson:gson:.*'))
-    }
-}
-
-// process resource tokens. the token will be @project.version@
-processResources {
-    filter ReplaceTokens, tokens: [
-        'project.version': project.version
-    ]
-}
-
-publishing {
-    repositories {
-        publications {
-            shadow(MavenPublication) {
-                from components.java
-                artifact shadowJar
-            }
-        }
-    }
+compileJava {
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 }
 
 repositories {
@@ -79,4 +38,33 @@ dependencies {
     compile 'com.sk89q:worldedit:6.0.0-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.1'
     compile 'com.google.guava:guava:10.0.1'
+}
+
+jar {
+    classifier = 'original'
+    version = null
+}
+
+shadowJar {
+    classifier = ''
+    version = null
+
+    dependencies {
+        include(dependency('com.google.code.gson:gson'))
+    }
+
+    relocate 'com.google.gson', 'com.drtshock.factionshock.vendor.com.google.gson'
+}
+build.dependsOn(shadowJar)
+
+processResources {
+    expand version: version
+}
+
+publishing {
+    publications {
+        shadow(MavenPublication) {
+            artifact shadowJar
+        }
+    }
 }
