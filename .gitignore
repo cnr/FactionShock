@@ -6,8 +6,12 @@
 # netbeans
 /nbproject
 
-# we use maven!
+# ignore ant
 /build.xml
+
+# gradle
+.gradle/
+build/
 
 # maven
 /target
