@@ -36,7 +36,7 @@ guidelines to follow:
 Cashmoney
 --------
 This project is currently free and will always be open source. If/when binaries are sold, major contributors can talk to @drtshock
-about potential compensation. All contributors will be allowed to run binaries without purchasing.
+about potential compensation.
 
 Checklist
 ---------
